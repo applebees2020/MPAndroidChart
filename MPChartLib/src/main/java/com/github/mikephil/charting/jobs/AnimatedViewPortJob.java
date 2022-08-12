@@ -57,6 +57,7 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
     public abstract void recycleSelf();
 
     protected void resetAnimator(){
+        System.out.println("resetAnim AnimatedVportJob");
         animator.removeAllListeners();
         animator.removeAllUpdateListeners();
         animator.reverse();
@@ -71,6 +72,7 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
 
     @Override
     public void onAnimationEnd(Animator animation) {
+        System.out.println("onAnimEnd AnimatedVportJob");
         try{
             recycleSelf();
         }catch (IllegalArgumentException e){
@@ -80,6 +82,7 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
 
     @Override
     public void onAnimationCancel(Animator animation) {
+        System.out.println("onAnimCancel AnimatedVportJob");
         try{
             recycleSelf();
         }catch (IllegalArgumentException e){
@@ -89,7 +92,7 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
 
     @Override
     public void onAnimationRepeat(Animator animation) {
-
+        System.out.println("onAnimRpt AnimatedVportJob");
     }
 
     @Override
