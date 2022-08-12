@@ -70,7 +70,7 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
     protected Matrix mOnAnimationUpdateMatrixBuffer = new Matrix();
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-
+        System.out.println("onAnimUpdate AnimatedZoomJob");
         float scaleX = xOrigin + (xValue - xOrigin) * phase;
         float scaleY = yOrigin + (yValue - yOrigin) * phase;
 
@@ -114,7 +114,7 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
 
     @Override
     public void onAnimationStart(Animator animation) {
-
+        System.out.println("onAnimStart AnimatedZoomJob");
     }
 
     @Override
