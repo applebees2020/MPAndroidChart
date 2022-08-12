@@ -35,7 +35,6 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
         result.yOrigin = yOrigin;
         result.yAxis = axis;
         result.xAxisRange = xAxisRange;
-        result.resetAnimator();
         result.animator.setDuration(duration);
         result.zoomCenterX = zoomCenterX;
         result.zoomCenterY = zoomCenterY;
@@ -70,7 +69,7 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
     protected Matrix mOnAnimationUpdateMatrixBuffer = new Matrix();
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-        System.out.println("onAnimUpdate AnimatedZoomJob");
+        
         float scaleX = xOrigin + (xValue - xOrigin) * phase;
         float scaleY = yOrigin + (yValue - yOrigin) * phase;
 
@@ -94,27 +93,22 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
     public void onAnimationEnd(Animator animation) {
         ((BarLineChartBase) view).calculateOffsets();
         view.postInvalidate();
-        System.out.println("onAnimEnd AnimatedZoomJob");
     }
 
     @Override
     public void onAnimationCancel(Animator animation) {
-        System.out.println("onAnimCancel AnimatedZoomJob");
     }
 
     @Override
     public void onAnimationRepeat(Animator animation) {
-        System.out.println("onAnimRpt AnimatedZoomJob");
     }
 
     @Override
     public void recycleSelf() {
-        System.out.println("recycleSelf AnimatedZoomJob");
     }
 
     @Override
     public void onAnimationStart(Animator animation) {
-        System.out.println("onAnimStart AnimatedZoomJob");
     }
 
     @Override
