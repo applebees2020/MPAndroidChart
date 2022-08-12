@@ -36,6 +36,7 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
     @Override
     public void run() {
         animator.start();
+        System.out.println("run AnimatedVportJob");  
     }
 
     public float getPhase() {
@@ -67,7 +68,7 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
 
     @Override
     public void onAnimationStart(Animator animation) {
-
+        System.out.println("onAnimStart AnimatedVportJob");
     }
 
     @Override
@@ -97,6 +98,6 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
 
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-
+        System.out.println("onAnimUpdate AnimatedVportJob");
     }
 }
