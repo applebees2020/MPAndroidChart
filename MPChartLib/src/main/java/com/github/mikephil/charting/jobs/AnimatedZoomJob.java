@@ -5,9 +5,11 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.utils.MPPointD;
 import com.github.mikephil.charting.utils.ObjectPool;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.ViewPortHandler;
@@ -27,6 +29,10 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
     public static AnimatedZoomJob getInstance(ViewPortHandler viewPortHandler, View v, Transformer trans, YAxis axis, float xAxisRange, float scaleX, float scaleY, float xOrigin, float yOrigin, float zoomCenterX, float zoomCenterY, float zoomOriginX, float zoomOriginY, long duration) {
         AnimatedZoomJob result = pool.get();
         result.mViewPortHandler = viewPortHandler;
+        result.zoomCenterX = zoomCenterX;
+        result.zoomCenterY = zoomCenterY;
+        result.zoomOriginX = zoomOriginX;
+        result.zoomOriginY = zoomOriginY;
         result.xValue = scaleX;
         result.yValue = scaleY;
         result.mTrans = trans;
@@ -35,11 +41,8 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
         result.yOrigin = yOrigin;
         result.yAxis = axis;
         result.xAxisRange = xAxisRange;
+        //result.resetAnimator();
         result.animator.setDuration(duration);
-        result.zoomCenterX = zoomCenterX;
-        result.zoomCenterY = zoomCenterY;
-        result.zoomOriginX = zoomOriginX;
-        result.zoomOriginY = zoomOriginY;
         return result;
     }
 
@@ -67,9 +70,13 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
     }
 
     protected Matrix mOnAnimationUpdateMatrixBuffer = new Matrix();
+    //protected float zoomOffsetMarginX;
+    protected float finalXValsInView;
+    //protected float zoomOffsetMarginY;
+    protected float finalYValsInView;
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-        
+
         float scaleX = xOrigin + (xValue - xOrigin) * phase;
         float scaleY = yOrigin + (yValue - yOrigin) * phase;
 
@@ -77,11 +84,19 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
         mViewPortHandler.setZoom(scaleX, scaleY, save);
         mViewPortHandler.refresh(save, view, false);
 
-        float valsInView = yAxis.mAxisRange / mViewPortHandler.getScaleY();
-        float xsInView =  xAxisRange / mViewPortHandler.getScaleX();
+        float yValsInView = yAxis.mAxisRange / mViewPortHandler.getScaleY();
+        float xValsInView =  xAxisRange / mViewPortHandler.getScaleX();
 
-        pts[0] = zoomOriginX + ((zoomCenterX - xsInView / 2f) - zoomOriginX) * phase;
-        pts[1] = zoomOriginY + ((zoomCenterY + valsInView / 2f) - zoomOriginY) * phase;
+        //float zoomOffsetX = 0.5f * xValsInView * (1 - (1/scaleX));
+        //float zoomOffsetY = 0.5f * yValsInView * (1 - (1/scaleY));
+
+        float speedRegX = xValsInView / finalXValsInView;
+        float speedRegY = yValsInView / finalYValsInView;
+
+        //pts[0] = zoomOffsetX + zoomOriginX + ((zoomCenterX - xValsInView / 2f) - zoomOriginX - zoomOffsetMarginX) * phase * speedRegX;
+        //pts[1] = zoomOffsetY + zoomOriginY + ((zoomCenterY + yValsInView / 2f) - zoomOriginY - zoomOffsetMarginY) * phase * speedRegY;
+        pts[0] = zoomOriginX + ((zoomCenterX - xValsInView / 2f) - zoomOriginX) * phase * speedRegX;
+        pts[1] = zoomOriginY + ((zoomCenterY + yValsInView / 2f) - zoomOriginY) * phase * speedRegY;
 
         mTrans.pointValuesToPixel(pts);
 
@@ -109,6 +124,13 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
 
     @Override
     public void onAnimationStart(Animator animation) {
+        float finalScaleX = xOrigin + (xValue - xOrigin);
+        finalXValsInView = xAxisRange * (1 / finalScaleX);
+        //zoomOffsetMarginX = 0.5f * finalXValsInView * (1 - (1/finalScaleX));
+
+        float finalScaleY = yOrigin + (yValue - yOrigin);
+        finalYValsInView = yAxis.mAxisRange * (1 / finalScaleY);
+        //zoomOffsetMarginY = 0.5f * finalYValsInView * (1 - (1/finalScaleY));
     }
 
     @Override
