@@ -153,7 +153,8 @@ public abstract class AxisBase extends ComponentBase {
     public float mAxisRange = 0f;
 
     private int mAxisMinLabels = 2;
-    private int mAxisMaxLabels = 25;
+    //private int mAxisMaxLabels = 25;
+    private int mAxisMaxLabels = 200;
 
     /**
      * The minumum number of labels on the axis
